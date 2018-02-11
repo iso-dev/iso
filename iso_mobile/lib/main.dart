@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'IsoTheme.dart';
 
 void main() => runApp(new MyApp());
 
@@ -7,18 +8,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'Flutter Demo',
-      theme: new ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
-        // counter didn't reset back to zero; the application is not restarted.
-        primarySwatch: Colors.blue,
-      ),
+      title: 'ISO Dev',
+      theme: IsoThemeData,
       home: new MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -44,6 +35,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  String _username = "Bob";
+  TextEditingController textController;
+
+  _MyHomePageState() : textController = new TextEditingController();
 
   void _incrementCounter() {
     setState(() {
@@ -53,6 +48,12 @@ class _MyHomePageState extends State<MyHomePage> {
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
       _counter++;
+    });
+  }
+
+  void _changeUsername() {
+    setState(() {
+      _username = textController.text;
     });
   }
 
@@ -89,6 +90,26 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            new PaddedColumn(
+              children: <Widget>[
+                new Row(
+                    children: <Widget>[
+//                      new Expanded(
+//                        child:
+                      new Text('USER: ', textAlign: TextAlign.left, textScaleFactor: 1.4,),
+//                      ),
+                      new Expanded(
+                        child: new TextField(controller: textController,),
+                      ),
+                    ]),
+                new MaterialButton(
+                  color: Colors.blueGrey,
+                  textColor: Colors.white,
+                  child: new Text('$_username'),
+                  onPressed: _changeUsername,
+                ),
+              ],
+            ),
             new Text(
               'You have pushed the button this many times:',
             ),
@@ -104,6 +125,26 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: new Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+/// Displays elements in a column with padding
+class PaddedColumn extends StatelessWidget {
+  final EdgeInsetsGeometry padding;
+  final List<Widget> children;
+  PaddedColumn({this.padding = const EdgeInsets.all(15.0), this.children});
+
+  Widget build(BuildContext context) {
+    return new Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: this
+          .children
+          .map((c) => new Padding(
+        padding: this.padding,
+        child: c,
+      ))
+          .toList(),
     );
   }
 }
